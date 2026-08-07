@@ -58,6 +58,13 @@ namespace ToDo_Web.Controllers
             await projectService.DeleteAsync(id);
             return NoContent();
         }
-        
+
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchProjects([FromQuery]SearchQuerry searchQuerry)
+        {
+            var projects = await projectService.SearchProjectsAsync(searchQuerry);
+            return Ok(projects);
+        }
+
     }
 }

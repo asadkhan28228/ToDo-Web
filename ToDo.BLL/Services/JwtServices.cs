@@ -30,9 +30,7 @@ namespace ToDo.BLL.Services
 
                 new Claim(ClaimTypes.Email,user.Email),
 
-                new Claim(
-                    JwtRegisteredClaimNames.Jti,
-                    Guid.NewGuid().ToString())
+                new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString())
             };
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key!));

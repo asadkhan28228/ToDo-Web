@@ -15,6 +15,9 @@ namespace ToDo.DAL.IRepository
         Task UpdateAsync(Project project);
 
         Task DeleteAsync(int id);
+
+        Task<List<Project>> SearchProjectsAsync(string id ,string Title);
+
         Task SaveChangesAsync();
     }
 }

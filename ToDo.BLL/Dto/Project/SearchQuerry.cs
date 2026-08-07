@@ -4,7 +4,9 @@ using System.Text;
 
 namespace ToDo.BLL.Dto.Project
 {
-    internal class SearchQuerry
+    public class SearchQuerry
     {
+        public string? ID { get; set; }
+        public string Title { get; set; }
     }
 }

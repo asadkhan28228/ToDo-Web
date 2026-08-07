@@ -107,7 +107,7 @@ namespace ToDo.BLL.Services
 
         public async Task<List<ProjectDto>> SearchProjectsAsync(SearchQuerry searchQuerry)
         {
-            var projects = await projectRepository.SearchProjectsAsync(searchQuerry.Search);
+            var projects = await projectRepository.SearchProjectsAsync(searchQuerry.ID, searchQuerry.Title);
             var projectDtos = new List<ProjectDto>();
             foreach (var project in projects)
             {
