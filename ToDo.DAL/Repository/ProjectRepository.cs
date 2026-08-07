@@ -49,6 +49,13 @@ namespace ToDo.DAL.Repository
             }
 
         }
+
+        public async Task<List<Project>> SearchProjectsAsync(string search)
+        {
+            return await context.Projects
+                .Where(p => p.Id.ToString().Contains(search) || p.Title.Contains(search) )
+                .ToListAsync();
+        }
         public async Task SaveChangesAsync()
         {
             await context.SaveChangesAsync();

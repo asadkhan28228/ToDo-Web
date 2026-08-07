@@ -104,5 +104,26 @@ namespace ToDo.BLL.Services
                 await projectRepository.DeleteAsync(id);
             }
         }   
+
+        public async Task<List<ProjectDto>> SearchProjectsAsync(SearchQuerry searchQuerry)
+        {
+            var projects = await projectRepository.SearchProjectsAsync(searchQuerry.Search);
+            var projectDtos = new List<ProjectDto>();
+            foreach (var project in projects)
+            {
+                var projectDto = new ProjectDto
+                {
+                    Id = project.Id,
+                    Title = project.Title,
+                    Description = project.Description,
+                    DueDate = project.DueDate,
+                    Priority = project.Priority,
+                    Status = project.Status,
+                    UserId = project.UserId
+                };
+                projectDtos.Add(projectDto);
+            }
+            return projectDtos;
+        }
     }
 }

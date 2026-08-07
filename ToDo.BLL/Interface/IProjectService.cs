@@ -11,6 +11,8 @@ namespace ToDo.BLL.Interface
         Task<List<ProjectDto>> GetAllProjectsAsync();
         Task<ProjectDto> GetProjectByIdAsync(int id);
         Task UpdateAsync(UpdateprojectDto updatedto);
+
+        Task<List<ProjectDto>> SearchProjectsAsync(SearchQuerry searchQuerry);
         Task DeleteAsync(int id);
     }
 }
