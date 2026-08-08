@@ -2,13 +2,14 @@
 using ToDo.DAL.Context;
 using ToDo.DAL.Entities;
 using ToDo.DAL.IRepository;
+
 namespace ToDo.DAL.Repository
 {
     public class AuthRepository : IAuthRepository
     {
-        private readonly ToDoDbContext context;
+        private readonly ToDoContext context;
 
-        public AuthRepository(ToDoDbContext context)
+        public AuthRepository(ToDoContext context)
         {
             this.context = context;
         }

@@ -7,16 +7,16 @@ namespace ToDo.DAL.IRepository
 {
     public interface IProjectRepository
     {
-        Task AddProjectAsync(Project project);
+        Task AddProjectAsync(Tasks project);
 
-        Task<List<Project>> GetAllProjectsAsync();
-        Task<Project> GetProjectByIdAsync(int id);
+        Task<List<Tasks>> GetAllProjectsAsync();
+        Task<Tasks> GetProjectByIdAsync(int id);
 
-        Task UpdateAsync(Project project);
+        Task UpdateAsync(Tasks project);
 
         Task DeleteAsync(int id);
 
-        Task<List<Project>> SearchProjectsAsync(string id ,string Title);
+        Task<List<Tasks>> SearchProjectsAsync(string id ,string Title);
 
         Task SaveChangesAsync();
     }

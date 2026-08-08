@@ -1,22 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using ToDo.DAL.Entities;
 
 namespace ToDo.DAL.Context;
 
-public partial class ToDoDbContext : DbContext
+public partial class ToDoContext : DbContext
 {
-    public ToDoDbContext()
+    public ToDoContext()
     {
     }
 
-    public ToDoDbContext(DbContextOptions<ToDoDbContext> options)
+    public ToDoContext(DbContextOptions<ToDoContext> options)
         : base(options)
     {
     }
 
-    public virtual DbSet<Project> Projects { get; set; }
+    public virtual DbSet<Tasks> Tasks { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
@@ -26,7 +25,7 @@ public partial class ToDoDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Project>(entity =>
+        modelBuilder.Entity<Tasks>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Project__3214EC0751955B2D");
 
@@ -34,7 +33,7 @@ public partial class ToDoDbContext : DbContext
             entity.Property(e => e.Priority).HasDefaultValue("Medium");
             entity.Property(e => e.Status).HasDefaultValue("Pending");
 
-            entity.HasOne(d => d.User).WithMany(p => p.Projects).HasConstraintName("FK_Tasks_Users");
+            entity.HasOne(d => d.User).WithMany(p => p.Tasks).HasConstraintName("FK_Tasks_Users");
         });
 
         modelBuilder.Entity<User>(entity =>

@@ -10,6 +10,7 @@ using ToDo.BLL.Interface;
 using ToDo.BLL.Services;
 using ToDo.DAL.Context;
 using ToDo.DAL.IRepository;
+
 using ToDo.DAL.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,10 +22,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+//builder.Services.AddOpenApi();
 
 // registered Connection string
-builder.Services.AddDbContext<ToDoDbContext>(options =>
+builder.Services.AddDbContext<ToDoContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
@@ -67,8 +68,8 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-       app.MapOpenApi();
-       app.MapScalarApiReference();
+    //app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 
 app.UseHttpsRedirection();

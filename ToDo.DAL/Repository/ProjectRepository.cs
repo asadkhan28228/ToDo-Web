@@ -3,56 +3,57 @@ using ToDo.DAL.Context;
 using ToDo.DAL.Entities;
 using ToDo.DAL.IRepository;
 
+
 namespace ToDo.DAL.Repository
 {
     public class ProjectRepository : IProjectRepository
     {
-        private readonly ToDoDbContext context;
+        private readonly ToDoContext context;
 
-        public ProjectRepository(ToDoDbContext context)
+        public ProjectRepository(ToDoContext context)
         {
             this.context = context;
         }
         
 
-        public async Task<List<Project>> GetAllProjectsAsync()
+        public async Task<List<Tasks>> GetAllProjectsAsync()
         {
-            return await context.Projects.ToListAsync();
+            return await context.Tasks.ToListAsync();
         }
-        public async Task<Project> GetProjectByIdAsync(int id)
+        public async Task<Tasks> GetProjectByIdAsync(int id)
         {
-            return await context.Projects.FindAsync(id);
+            return await context.Tasks.FindAsync(id);
         }
-        public async Task AddProjectAsync(Project project)
+        public async Task AddProjectAsync(Tasks project)
         {
-            await context.Projects.AddAsync(project);
+            await context.Tasks.AddAsync(project);
 
             await context.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(Project project)
+        public async Task UpdateAsync(Tasks project)
         {
-            context.Projects.Update(project);
+            context.Tasks.Update(project);
 
             await context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(int id)
         {
-            var project = await context.Projects.FindAsync(id);
+            var project = await context.Tasks.FindAsync(id);
 
             if (project != null)
             {
-                context.Projects.Remove(project);
+                context.Tasks.Remove(project);
 
                 await context.SaveChangesAsync();
             }
 
         }
 
-        public async Task<List<Project>> SearchProjectsAsync(string id, string Title)
+        public async Task<List<Tasks>> SearchProjectsAsync(string id, string Title)
         {
-            return await context.Projects
+            return await context.Tasks
                 .Where(p => p.Id.ToString().Contains(id) || p.Title.Contains(Title))
                 .ToListAsync();
         }

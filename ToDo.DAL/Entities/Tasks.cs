@@ -6,8 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ToDo.DAL.Entities;
 
-[Table("Project")]
-public partial class Project
+public partial class Tasks
 {
     [Key]
     public int Id { get; set; }
@@ -31,6 +30,6 @@ public partial class Project
     public DateTime CreatedAt { get; set; }
 
     [ForeignKey("UserId")]
-    [InverseProperty("Projects")]
+    [InverseProperty("Tasks")]
     public virtual User User { get; set; } = null!;
 }

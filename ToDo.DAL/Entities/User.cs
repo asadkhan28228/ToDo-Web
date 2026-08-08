@@ -14,7 +14,7 @@ public partial class User
 
     [StringLength(100)]
     public string FullName { get; set; } = null!;
-    
+
     [StringLength(150)]
     public string Email { get; set; } = null!;
 
@@ -30,6 +30,6 @@ public partial class User
 
     public DateTime CreatedAt { get; set; }
 
-    
-    public virtual ICollection<Project> Projects { get; set; } = new List<Project>();
+    [InverseProperty("User")]
+    public virtual ICollection<Tasks> Tasks { get; set; } = new List<Tasks>();
 }

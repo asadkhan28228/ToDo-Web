@@ -77,6 +77,7 @@ namespace ToDo.BLL.Services
                 Status = project.Status,
                 UserId = project.UserId
             };
+
             return projectDto;
         }
 
