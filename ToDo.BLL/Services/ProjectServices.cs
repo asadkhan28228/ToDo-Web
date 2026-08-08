@@ -21,7 +21,7 @@ namespace ToDo.BLL.Services
         //  ADD Function //
         public async Task<string> AddProjectAsync(CreateProjectDto Adddto)
         {
-            var project = new Project
+            var Tasks = new Tasks
             {
                 Title = Adddto.Title,
                 Description = Adddto.Description,
@@ -31,7 +31,7 @@ namespace ToDo.BLL.Services
                 UserId = Adddto.UserId,
                 
             };
-            await projectRepository.AddProjectAsync(project);
+            await projectRepository.AddProjectAsync(Tasks);
 
             await projectRepository.SaveChangesAsync();
 
@@ -95,6 +95,7 @@ namespace ToDo.BLL.Services
                 project.UserId = updatedto.UserId;
                 await projectRepository.UpdateAsync(project);
             }
+
         }
         public async Task DeleteAsync(int id)
         {

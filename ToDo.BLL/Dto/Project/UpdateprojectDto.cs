@@ -28,8 +28,6 @@ namespace ToDo.BLL.Dto.Project
 
         public DateTime CreatedAt { get; set; }
 
-        [ForeignKey("UserId")]
-        [InverseProperty("Projects")]
-        public virtual User User { get; set; } = null!;
+        
     }
 }

@@ -10,11 +10,11 @@ namespace ToDo_Web.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class ProjectController : ControllerBase
+    public class TaskController : ControllerBase
     {
         private readonly IProjectService projectService;
 
-        public ProjectController(IProjectService projectService)
+        public TaskController(IProjectService projectService)
         {
             this.projectService = projectService;
         }
@@ -50,7 +50,11 @@ namespace ToDo_Web.Controllers
         public async Task<IActionResult> UpdateProject(UpdateprojectDto project)
         {
             await projectService.UpdateAsync(project);
-            return NoContent();
+            return Ok(new
+            {
+                Message = "Project Updated successfully",
+                Data = project
+            });
         }
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProject(int id)
