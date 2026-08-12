@@ -11,6 +11,7 @@ using ToDo.BLL.Services;
 using ToDo.DAL.Context;
 using ToDo.DAL.IRepository;
 using ToDo.DAL.Repository;
+using ToDo_Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,7 +33,9 @@ var sqlitePath = Path.Combine(
 
 builder.Services.AddDbContext<SqliteToDoContext>(options =>
 {
-    options.UseSqlite($"Data Source={sqlitePath}");
+    options.UseSqlite(
+        $"Data Source={sqlitePath};Default Timeout=30;"
+    );
 });
 //This is JWT Service
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -66,7 +69,7 @@ builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IJwtService, JwtServices>();
 builder.Services.AddScoped<IAuthService, AuthServices>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
-
+builder.Services.AddHostedService<TaskSyncService>();
 
 var app = builder.Build();
 

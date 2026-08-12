@@ -34,7 +34,7 @@ namespace ToDo_Web.Services
                     logger.LogError(ex,"SQLite to SQL Server synchronization failed.");
                 }
                 // Har 1 minute baad sync
-                await Task.Delay(TimeSpan.FromMinutes(1),stoppingToken);
+                await Task.Delay(TimeSpan.FromSeconds(30),stoppingToken);
             }
         }
 
@@ -83,7 +83,10 @@ namespace ToDo_Web.Services
 
                     await sqlContext.SaveChangesAsync();
 
-
+                    Console.WriteLine(
+                        $"[{DateTime.Now:HH:mm:ss}] SQL SERVER SAVE: " +
+                        $"Id={sqlTask.Id}, Title={sqlTask.Title}"
+                    );
                     // SQL Server generated ID
                     // SQLite me store karo
                     localTask.SqlServerId =sqlTask.Id;

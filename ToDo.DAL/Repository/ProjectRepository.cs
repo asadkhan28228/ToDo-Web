@@ -72,6 +72,11 @@ namespace ToDo.DAL.Repository
             await sqliteContext.LocalTasks.AddAsync(localTask);
 
             await sqliteContext.SaveChangesAsync();
+
+            Console.WriteLine(
+                $"[{DateTime.Now:HH:mm:ss}] SQLite SAVE: " +
+                $"LocalId={localTask.LocalId}, Title={localTask.Title}, Status=Pending"
+            );
         }
 
         // ============================================
