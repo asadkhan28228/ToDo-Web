@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using ToDo.BLL.Dto.Project;
 using ToDo.BLL.Interface;
 using ToDo.DAL.Entities;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ToDo_Web.Controllers
 {
@@ -41,11 +42,10 @@ namespace ToDo_Web.Controllers
             return Ok(new
             {
                 Message = "Project added successfully",
-                Data = project
+                
             });
-
-
         }
+
         [HttpPut]
         public async Task<IActionResult> UpdateProject(UpdateprojectDto project)
         {
@@ -60,7 +60,10 @@ namespace ToDo_Web.Controllers
         public async Task<IActionResult> DeleteProject(int id)
         {
             await projectService.DeleteAsync(id);
-            return NoContent();
+            return Ok(new
+            {
+                Message = "Project Updated successfully",
+            });
         }
 
         [HttpGet("search")]

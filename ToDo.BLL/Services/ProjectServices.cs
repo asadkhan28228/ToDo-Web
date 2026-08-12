@@ -18,10 +18,10 @@ namespace ToDo.BLL.Services
             this.projectRepository = projectRepository;
         }
 
-        //  ADD Function //
+        // ADD Function
         public async Task<string> AddProjectAsync(CreateProjectDto Adddto)
         {
-            var Tasks = new Tasks
+            var task = new Tasks
             {
                 Title = Adddto.Title,
                 Description = Adddto.Description,
@@ -29,14 +29,12 @@ namespace ToDo.BLL.Services
                 Priority = Adddto.Priority,
                 Status = Adddto.Status,
                 UserId = Adddto.UserId,
-                
+                CreatedAt = DateTime.Now
             };
-            await projectRepository.AddProjectAsync(Tasks);
 
-            await projectRepository.SaveChangesAsync();
+            await projectRepository.AddProjectAsync(task);
 
-            return"Project will Added Successfully Added";
-
+            return "Project Added Successfully";
         }
         public async Task<List<ProjectDto>> GetAllProjectsAsync()
         {
