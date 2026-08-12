@@ -59,7 +59,7 @@ namespace ToDo.BLL.Services
 
             var token = jwtService.GenerateToken(user);
 
-            var expire = DateTime.Now.AddMinutes(60);
+            var expire = DateTime.Now.AddDays(7);
 
             user.Token = token;
             user.ExpiresAt = expire;
