@@ -26,6 +26,7 @@ namespace ToDo_Web.Controllers
             var projects = await projectService.GetAllProjectsAsync();
             return Ok(projects);
         }
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetProjectById(int id)
         {
             var project = await projectService.GetProjectByIdAsync(id);

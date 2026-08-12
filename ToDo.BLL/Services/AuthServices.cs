@@ -73,7 +73,8 @@ namespace ToDo.BLL.Services
                 Token = token,
                 ExpiresAt = DateTime.UtcNow.AddHours(1), // Example expiration time
                 FullName = user.FullName,
-                Email = user.Email
+                Email = user.Email,
+                UserId = user.Id
             };
         }
     }
