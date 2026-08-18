@@ -12,7 +12,7 @@ namespace ToDo.BLL.Interface
         Task<ProjectDto> GetProjectByIdAsync(int id);
         Task UpdateAsync(UpdateprojectDto updatedto);
 
+        Task<bool> DeleteAsync(int id);
         Task<List<ProjectDto>> SearchProjectsAsync(SearchQuerry searchQuerry);
-        Task DeleteAsync(int id);
     }
 }

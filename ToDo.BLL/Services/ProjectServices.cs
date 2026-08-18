@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
 using ToDo.BLL.Dto.Project;
@@ -21,11 +22,31 @@ namespace ToDo.BLL.Services
         // ADD Function
         public async Task<string> AddProjectAsync(CreateProjectDto Adddto)
         {
+            if (string.IsNullOrWhiteSpace(Adddto.DueDate))
+            {
+                return "Due Date is required.";
+            }
+
+            bool isValidDate = DateTime.TryParseExact(
+                Adddto.DueDate,
+                "dd-MM-yyyy",
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out DateTime dueDate);
+
+            if (!isValidDate)
+            {
+                return "Invalid Due Date. Please use dd-MM-yyyy format.";
+            }
+
             var task = new Tasks
             {
                 Title = Adddto.Title,
                 Description = Adddto.Description,
-                DueDate = Adddto.DueDate,
+
+                // Automatically 00:00:00 time hoga
+                DueDate = dueDate,
+
                 Priority = Adddto.Priority,
                 Status = Adddto.Status,
                 UserId = Adddto.UserId,
@@ -106,7 +127,6 @@ namespace ToDo.BLL.Services
             // Existing project update
             project.Title = updatedto.Title;
             project.Description = updatedto.Description;
-            project.DueDate = updatedto.DueDate;
             project.Priority = updatedto.Priority;
             project.Status = updatedto.Status;
             project.UserId = updatedto.UserId;
@@ -121,8 +141,7 @@ namespace ToDo.BLL.Services
                 return false;
             }
 
-            var project = await projectRepository
-                .GetProjectByIdAsync(id);
+            var project = await projectRepository.GetProjectByIdAsync(id);
 
             if (project == null)
             {

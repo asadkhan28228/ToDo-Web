@@ -1,118 +1,118 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using ToDo.DAL.Context;
-using ToDo.DAL.Entities;
+﻿//using Microsoft.EntityFrameworkCore;
+//using Microsoft.Extensions.DependencyInjection;
+//using Microsoft.Extensions.Hosting;
+//using Microsoft.Extensions.Logging;
+//using ToDo.DAL.Context;
+//using ToDo.DAL.Entities;
 
-namespace ToDo_Web.Services
-{
-    public class TaskSyncService : BackgroundService
-    {
-        private readonly IServiceScopeFactory scopeFactory;
-        private readonly ILogger<TaskSyncService> logger;
+//namespace ToDo_Web.Services
+//{
+//    public class TaskSyncService : BackgroundService
+//    {
+//        private readonly IServiceScopeFactory scopeFactory;
+//        private readonly ILogger<TaskSyncService> logger;
 
-        public TaskSyncService(
-            IServiceScopeFactory scopeFactory,
-            ILogger<TaskSyncService> logger)
-        {
-            this.scopeFactory = scopeFactory;
-            this.logger = logger;
-        }
-
-
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-        {
-            while (!stoppingToken.IsCancellationRequested)
-            {
-                try
-                {
-                    await SyncPendingTasks();
-                }
-                catch (Exception ex)
-                {
-                    logger.LogError(ex,"SQLite to SQL Server synchronization failed.");
-                }
-                // Har 1 minute baad sync
-                await Task.Delay(TimeSpan.FromSeconds(30),stoppingToken);
-            }
-        }
+//        public TaskSyncService(
+//            IServiceScopeFactory scopeFactory,
+//            ILogger<TaskSyncService> logger)
+//        {
+//            this.scopeFactory = scopeFactory;
+//            this.logger = logger;
+//        }
 
 
-        private async Task SyncPendingTasks()
-        {
-            using var scope = scopeFactory.CreateScope();
-
-            var sqliteContext =scope.ServiceProvider.GetRequiredService<SqliteToDoContext>();
-
-            var sqlContext = scope.ServiceProvider.GetRequiredService<ToDoContext>();
-
-            // Sirf Pending records uthao
-            var pendingTasks =await sqliteContext.LocalTasks.Where(x =>x.SyncStatus == "Pending").ToListAsync();
-
-            if (!pendingTasks.Any())
-            {
-                return;
-            }
-
-
-            foreach (var localTask in pendingTasks)
-            {
-                try
-                {
-                    var sqlTask = new Tasks
-                    {
-                        Title = localTask.Title,
-
-                        Description =localTask.Description,
-
-                        DueDate =localTask.DueDate,
-
-                        Priority =localTask.Priority,
-
-                        Status =localTask.Status,
-
-                        UserId =localTask.UserId,
-
-                        CreatedAt =localTask.CreatedAt
-                    };
+//        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+//        {
+//            while (!stoppingToken.IsCancellationRequested)
+//            {
+//                try
+//                {
+//                    await SyncPendingTasks();
+//                }
+//                catch (Exception ex)
+//                {
+//                    logger.LogError(ex,"SQLite to SQL Server synchronization failed.");
+//                }
+//                // Har 1 minute baad sync
+//                await Task.Delay(TimeSpan.FromSeconds(30),stoppingToken);
+//            }
+//        }
 
 
-                    // SQL Server me save
-                    await sqlContext.Tasks.AddAsync(sqlTask);
+//        private async Task SyncPendingTasks()
+//        {
+//            using var scope = scopeFactory.CreateScope();
 
-                    await sqlContext.SaveChangesAsync();
+//            var sqliteContext =scope.ServiceProvider.GetRequiredService<SqliteToDoContext>();
 
-                    Console.WriteLine(
-                        $"[{DateTime.Now:HH:mm:ss}] SQL SERVER SAVE: " +
-                        $"Id={sqlTask.Id}, Title={sqlTask.Title}"
-                    );
-                    // SQL Server generated ID
-                    // SQLite me store karo
-                    localTask.SqlServerId =sqlTask.Id;
+//            var sqlContext = scope.ServiceProvider.GetRequiredService<ToDoContext>();
 
-                    localTask.SyncStatus ="Synced";
+//            // Sirf Pending records uthao
+//            var pendingTasks =await sqliteContext.LocalTasks.Where(x =>x.SyncStatus == "Pending").ToListAsync();
 
-                    localTask.SyncedAt =DateTime.Now;
-
-
-                    sqliteContext.LocalTasks.Update(localTask);
-
-                    await sqliteContext.SaveChangesAsync();
+//            if (!pendingTasks.Any())
+//            {
+//                return;
+//            }
 
 
-                    logger.LogInformation("Task {LocalId} synced successfully.",localTask.LocalId);
-                }
-                catch (Exception ex)
-                {
-                    // Failed record Pending hi rahe
-                    localTask.SyncStatus ="Pending";
+//            foreach (var localTask in pendingTasks)
+//            {
+//                try
+//                {
+//                    var sqlTask = new Tasks
+//                    {
+//                        Title = localTask.Title,
 
-                    await sqliteContext.SaveChangesAsync();
+//                        Description =localTask.Description,
 
-                    logger.LogError(ex,"Task {LocalId} could not sync.",localTask.LocalId);
-                }
-            }
-        }
-    }
-}
+//                        DueDate =localTask.DueDate,
+
+//                        Priority =localTask.Priority,
+
+//                        Status =localTask.Status,
+
+//                        UserId =localTask.UserId,
+
+//                        CreatedAt =localTask.CreatedAt
+//                    };
+
+
+//                    // SQL Server me save
+//                    await sqlContext.Tasks.AddAsync(sqlTask);
+
+//                    await sqlContext.SaveChangesAsync();
+
+//                    Console.WriteLine(
+//                        $"[{DateTime.Now:HH:mm:ss}] SQL SERVER SAVE: " +
+//                        $"Id={sqlTask.Id}, Title={sqlTask.Title}"
+//                    );
+//                    // SQL Server generated ID
+//                    // SQLite me store karo
+//                    localTask.SqlServerId =sqlTask.Id;
+
+//                    localTask.SyncStatus ="Synced";
+
+//                    localTask.SyncedAt =DateTime.Now;
+
+
+//                    sqliteContext.LocalTasks.Update(localTask);
+
+//                    await sqliteContext.SaveChangesAsync();
+
+
+//                    logger.LogInformation("Task {LocalId} synced successfully.",localTask.LocalId);
+//                }
+//                catch (Exception ex)
+//                {
+//                    // Failed record Pending hi rahe
+//                    localTask.SyncStatus ="Pending";
+
+//                    await sqliteContext.SaveChangesAsync();
+
+//                    logger.LogError(ex,"Task {LocalId} could not sync.",localTask.LocalId);
+//                }
+//            }
+//        }
+//    }
+//}

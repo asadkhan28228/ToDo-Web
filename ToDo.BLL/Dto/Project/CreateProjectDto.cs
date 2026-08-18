@@ -15,7 +15,7 @@ namespace ToDo.BLL.Dto.Project
         [StringLength(1000)]
         public string? Description { get; set; }
 
-        public DateTime? DueDate { get; set; }
+        public string DueDate { get; set; } = string.Empty;
 
         [StringLength(20)]
         public string Priority { get; set; } = null!;
@@ -23,12 +23,9 @@ namespace ToDo.BLL.Dto.Project
         [StringLength(30)]
         public string Status { get; set; } = null!;
 
+
         public int UserId { get; set; }
 
-        public DateTime CreatedAt { get; set; }
-
-        //[ForeignKey("UserId")]
-        //[InverseProperty("Projects")]
-        //public virtual User User { get; set; } = null!;
+        
     }
 }

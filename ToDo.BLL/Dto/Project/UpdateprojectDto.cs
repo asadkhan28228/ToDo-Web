@@ -16,7 +16,7 @@ namespace ToDo.BLL.Dto.Project
         [StringLength(1000)]
         public string? Description { get; set; }
 
-        public DateTime? DueDate { get; set; }
+        
 
         [StringLength(20)]
         public string Priority { get; set; } = null!;
@@ -26,7 +26,7 @@ namespace ToDo.BLL.Dto.Project
 
         public int UserId { get; set; }
 
-        public DateTime CreatedAt { get; set; }
+       
 
         
     }
