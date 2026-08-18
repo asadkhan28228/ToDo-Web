@@ -2,18 +2,22 @@
 using ToDo.DAL.Context;
 using ToDo.DAL.Entities;
 using ToDo.DAL.IRepository;
+using ToDo.DAL.SQLiteEntities;
 
 namespace ToDo.DAL.Repository
 {
     public class ProjectRepository : IProjectRepository
     {
         private readonly ToDoContext context;
+        private readonly SqliteToDoContext sqliteContext;
 
-        public ProjectRepository(ToDoContext context)
+        public ProjectRepository(
+            ToDoContext context,
+            SqliteToDoContext sqliteContext)
         {
             this.context = context;
+            this.sqliteContext = sqliteContext;
         }
-
         // ============================
         // GET ALL PROJECTS
         // ============================
@@ -43,9 +47,22 @@ namespace ToDo.DAL.Repository
                 project.CreatedAt = DateTime.Now;
             }
 
-            await context.Tasks.AddAsync(project);
+            var localTask = new LocalTask
+            {
+                Title = project.Title,
+                Description = project.Description,
+                DueDate = project.DueDate,
+                Priority = project.Priority,
+                Status = project.Status,
+                UserId = project.UserId,
+                CreatedAt = project.CreatedAt,
+                SyncStatus = "Pending"
+            };
 
-            await context.SaveChangesAsync();
+            // Pehle sirf SQLite mein save hoga
+            await sqliteContext.LocalTasks.AddAsync(localTask);
+
+            await sqliteContext.SaveChangesAsync();
         }
 
         // ============================
