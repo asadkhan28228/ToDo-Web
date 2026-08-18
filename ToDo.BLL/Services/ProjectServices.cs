@@ -82,28 +82,57 @@ namespace ToDo.BLL.Services
         //  UPDATE Function //
         public async Task UpdateAsync(UpdateprojectDto updatedto)
         {
+            // ID valid honi chahiye
+            if (updatedto == null || updatedto.ID <= 0)
+            {
+                return;
+            }
+
+            // Database se existing project find karo
             var project = await projectRepository.GetProjectByIdAsync(updatedto.ID);
-            if (project != null)
+
+            // Project nahi mila to update mat karo
+            if (project == null)
             {
-                project.Title = updatedto.Title;
-                project.Description = updatedto.Description;
-                project.DueDate = updatedto.DueDate;
-                project.Priority = updatedto.Priority;
-                project.Status = updatedto.Status;
-                project.UserId = updatedto.UserId;
-                await projectRepository.UpdateAsync(project);
+                return;
             }
 
+            // Required fields check
+            if (string.IsNullOrWhiteSpace(updatedto.Title))
+            {
+                return;
+            }
+
+            // Existing project update
+            project.Title = updatedto.Title;
+            project.Description = updatedto.Description;
+            project.DueDate = updatedto.DueDate;
+            project.Priority = updatedto.Priority;
+            project.Status = updatedto.Status;
+            project.UserId = updatedto.UserId;
+
+            // Repository ko update ke liye bhejo
+            await projectRepository.UpdateAsync(project);
         }
-        public async Task DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            var project = await projectRepository.GetProjectByIdAsync(id); 
-
-            if(project != null)
+            if (id <= 0)
             {
-                await projectRepository.DeleteAsync(id);
+                return false;
             }
-        }   
+
+            var project = await projectRepository
+                .GetProjectByIdAsync(id);
+
+            if (project == null)
+            {
+                return false;
+            }
+
+            await projectRepository.DeleteAsync(id);
+
+            return true;
+        }
 
         public async Task<List<ProjectDto>> SearchProjectsAsync(SearchQuerry searchQuerry)
         {

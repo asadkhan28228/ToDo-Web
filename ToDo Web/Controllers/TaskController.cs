@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ToDo.BLL.Dto.Project;
 using ToDo.BLL.Interface;
-using ToDo.DAL.Entities;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ToDo_Web.Controllers
 {
@@ -20,59 +17,178 @@ namespace ToDo_Web.Controllers
             this.projectService = projectService;
         }
 
+
+        // ============================
+        // GET ALL
+        // ============================
         [HttpGet]
         public async Task<IActionResult> GetAllProjects()
         {
-            var projects = await projectService.GetAllProjectsAsync();
+            var projects =await projectService.GetAllProjectsAsync();
+
             return Ok(projects);
         }
+
+
+        // ============================
+        // GET BY ID
+        // ============================
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProjectById(int id)
         {
-            var project = await projectService.GetProjectByIdAsync(id);
+            if (id <= 0)
+            {
+                return BadRequest(new
+                {
+                    Message = "Invalid project id."
+                });
+            }
+
+            var project =await projectService.GetProjectByIdAsync(id);
+
             if (project == null)
             {
-                return NotFound();
+                return NotFound(new
+                {
+                    Message = "Project not found."
+                });
             }
+
             return Ok(project);
         }
+
+
+        // ============================
+        // ADD
+        // ============================
         [HttpPost]
         public async Task<IActionResult> AddProject(CreateProjectDto project)
         {
+            if (project == null)
+            {
+                return BadRequest(new
+                {
+                    Message = "Project data is required."
+                });
+            }
+
+            if (string.IsNullOrWhiteSpace(project.Title))
+            {
+                return BadRequest(new
+                {
+                    Message = "Project title is required."
+                });
+            }
+
             await projectService.AddProjectAsync(project);
+
             return Ok(new
             {
-                Message = "Project added successfully",
-                
+                Message = "Project added successfully."
             });
         }
 
+
+        // ============================
+        // UPDATE
+        // ============================
         [HttpPut]
-        public async Task<IActionResult> UpdateProject(UpdateprojectDto project)
+        public async Task<IActionResult> UpdateProject(
+            UpdateprojectDto project)
         {
+            if (project == null)
+            {
+                return BadRequest(new
+                {
+                    Message = "Project data is required."
+                });
+            }
+
+            if (project.ID <= 0)
+            {
+                return BadRequest(new
+                {
+                    Message = "Invalid project id."
+                });
+            }
+
+            if (string.IsNullOrWhiteSpace(project.Title))
+            {
+                return BadRequest(new
+                {
+                    Message = "Project title is required."
+                });
+            }
+
+            // Pehle check karo project exist karta hai
+            var existingProject =
+                await projectService.GetProjectByIdAsync(
+                    project.ID);
+
+            if (existingProject == null)
+            {
+                return NotFound(new
+                {
+                    Message = "Project not found."
+                });
+            }
+
             await projectService.UpdateAsync(project);
+
             return Ok(new
             {
-                Message = "Project Updated successfully",
-                Data = project
+                Message = "Project updated successfully."
             });
         }
+
+
+        // ============================
+        // DELETE
+        // ============================
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProject(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new
+                {
+                    Message = "Invalid project id."
+                });
+            }
+
+            // Pehle check karo project exist karta hai
+            var existingProject =
+                await projectService.GetProjectByIdAsync(id);
+
+            if (existingProject == null)
+            {
+                return NotFound(new
+                {
+                    Message = "Project not found."
+                });
+            }
+
             await projectService.DeleteAsync(id);
+
             return Ok(new
             {
-                Message = "Project Updated successfully",
+                Message = "Project deleted successfully."
             });
         }
 
+
+        // ============================
+        // SEARCH
+        // ============================
         [HttpGet("search")]
-        public async Task<IActionResult> SearchProjects([FromQuery]SearchQuerry searchQuerry)
+        public async Task<IActionResult> SearchProjects(
+            [FromQuery] SearchQuerry searchQuerry)
         {
-            var projects = await projectService.SearchProjectsAsync(searchQuerry);
+            var projects =
+                await projectService.SearchProjectsAsync(
+                    searchQuerry);
+
             return Ok(projects);
         }
-
     }
 }
