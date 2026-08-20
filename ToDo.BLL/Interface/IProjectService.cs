@@ -1,18 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ToDo.BLL.Dto.Project;
+﻿using ToDo.BLL.Dto.Project;
 
 namespace ToDo.BLL.Interface
 {
     public interface IProjectService
     {
-        Task<string> AddProjectAsync(CreateProjectDto Adddto);
-        Task<List<ProjectDto>> GetAllProjectsAsync();
-        Task<ProjectDto> GetProjectByIdAsync(int id);
-        Task UpdateAsync(UpdateprojectDto updatedto);
+        // ADD
+        Task<string> AddProjectAsync(
+            CreateProjectDto Adddto);
 
-        Task<bool> DeleteAsync(int id);
-        Task<List<ProjectDto>> SearchProjectsAsync(SearchQuerry searchQuerry);
+
+        // GET ALL
+        Task<List<ProjectDto>> GetAllProjectsAsync();
+
+
+        // GET BY ID
+        Task<ProjectDto?> GetProjectByIdAsync(
+            int id);
+
+
+        // UPDATE
+        Task UpdateAsync(
+            UpdateprojectDto updatedto);
+
+
+        // DELETE
+        Task<bool> DeleteAsync(
+            int id);
+
+
+        // SEARCH
+        Task<List<ProjectDto>> SearchProjectsAsync(
+            SearchQuerry searchQuerry);
     }
 }

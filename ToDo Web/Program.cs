@@ -75,11 +75,9 @@ builder.Services
 
                 ValidateIssuerSigningKey = true,
 
-                ValidIssuer =
-                    builder.Configuration["Jwt:Issuer"],
+                ValidIssuer = builder.Configuration["Jwt:Issuer"],
 
-                ValidAudience =
-                    builder.Configuration["Jwt:Audience"],
+                ValidAudience = builder.Configuration["Jwt:Audience"],
 
                 IssuerSigningKey =
                     new SymmetricSecurityKey(
