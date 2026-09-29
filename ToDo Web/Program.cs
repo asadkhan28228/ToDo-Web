@@ -14,6 +14,11 @@ using ToDo_Web.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // ==============================
+// Listen on all network interfaces (so phone/emulator can reach it)
+// ==============================
+builder.WebHost.UseUrls("http://0.0.0.0:5106");
+
+// ==============================
 // Controllers
 // ==============================
 builder.Services.AddControllers();
@@ -164,7 +169,7 @@ if (app.Environment.IsDevelopment())
 }
 
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 
 // IMPORTANT
